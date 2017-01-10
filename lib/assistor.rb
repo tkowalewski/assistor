@@ -1,5 +1,7 @@
 require 'logger'
 require 'tmpdir'
+require 'forwardable'
+require 'securerandom'
 
 require 'assistor/version'
 require 'assistor/log_file'
