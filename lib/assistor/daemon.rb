@@ -17,7 +17,6 @@ module Assistor
       loop do
         sleep(delay) unless assist(queue)
       end
-      stop
     rescue => e
       log_file.error e
     end
