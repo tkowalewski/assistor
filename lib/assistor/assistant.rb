@@ -106,7 +106,7 @@ module Assistor
     def with_pid_file
       pid_file.create Process.pid
       yield
-      pid_file.delete pid_file
+      pid_file.delete
     end
   end
 end
