@@ -44,7 +44,7 @@ module Assistor
     end
 
     def decrease
-      @size -= 1
+      @size -= 1 if @size > 0
     end
   end
 end
