@@ -19,6 +19,7 @@ module Assistor
       end
     rescue => e
       log_file.error e
+      @configuration.exception_handler.call(e)
     end
 
     private
@@ -38,6 +39,7 @@ module Assistor
       exit!(0)
     rescue => e
       log_file.error e
+      @configuration.exception_handler.call(e)
     end
 
     def stop!
@@ -47,6 +49,7 @@ module Assistor
       exit!(1)
     rescue => e
       log_file.error e
+      @configuration.exception_handler.call(e)
     end
 
     def assist(queue)
@@ -60,6 +63,7 @@ module Assistor
       assistant_group.add(assistant)
     rescue => e
       log_file.error e
+      @configuration.exception_handler.call(e)
     end
 
     def daemonize
