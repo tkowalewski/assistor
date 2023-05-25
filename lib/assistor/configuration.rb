@@ -11,7 +11,7 @@ module Assistor
       @pid_file = PidFile.new file
     end
 
-    def exception_handler(exception_handler)
+    def exception_handler=(exception_handler)
       @exception_handler = exception_handler
     end
 
