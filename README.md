@@ -48,10 +48,6 @@ class ExampleJob < Assistor::AbstractJob
   def run
     sleep @i
   end
-
-  def fail(exception)
-    ExceptionHandler.handle exception
-  end
 end
 
 class ExampleQueue < Assistor::AbstractQueue
@@ -77,6 +73,7 @@ configuration = Assistor::Configuration.new
 configuration.id = 'example'
 configuration.size = 3
 configuration.delay = 0.2
+configuration.exception_handler = Proc.new { |exception| ExceptionHandler.handle(exception) }_
 configuration.log_file = File.join(File.expand_path('..',  __FILE__), 'example.log')
 configuration.pid_file = File.join(File.expand_path('..',  __FILE__), 'example.pid')
 

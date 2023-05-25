@@ -7,9 +7,5 @@ module Assistor
     def run
       raise NotImplementedError
     end
-
-    def fail(exception)
-      raise NotImplementedError
-    end
   end
 end

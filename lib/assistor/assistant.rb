@@ -48,7 +48,7 @@ module Assistor
       with_pid_file { @job.run }
     rescue => e
       log_file.error e
-      @job.fail e
+      @configuration.exception_handler.call(e)
     end
 
     def stop
