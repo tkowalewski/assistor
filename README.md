@@ -2,6 +2,11 @@
 
 Simple background processing framework for Ruby
 
+## Requirements
+
+* Ruby >= 3.2
+* A Unix-like OS (the gem relies on `fork`, `Process.daemon` and signals, so Windows is not supported)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -73,7 +78,7 @@ configuration = Assistor::Configuration.new
 configuration.id = 'example'
 configuration.size = 3
 configuration.delay = 0.2
-configuration.exception_handler = Proc.new { |exception| ExceptionHandler.handle(exception) }_
+configuration.exception_handler = Proc.new { |exception| ExceptionHandler.handle(exception) }
 configuration.log_file = File.join(File.expand_path('..',  __FILE__), 'example.log')
 configuration.pid_file = File.join(File.expand_path('..',  __FILE__), 'example.pid')
 
@@ -82,7 +87,7 @@ Assistor::Daemon.new(configuration).run(queue)
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `bundle exec rake spec` to run the tests, `bundle exec rubocop` to lint and `bundle exec bundle-audit check --update` to check dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
