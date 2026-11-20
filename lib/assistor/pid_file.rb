@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Assistor
   class PidFile
     def initialize(pid_file)

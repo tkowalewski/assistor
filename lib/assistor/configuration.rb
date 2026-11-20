@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Assistor
   class Configuration
     attr_accessor :id, :size, :delay
@@ -11,12 +13,10 @@ module Assistor
       @pid_file = PidFile.new file
     end
 
-    def exception_handler=(exception_handler)
-      @exception_handler = exception_handler
-    end
+    attr_writer :exception_handler
 
     def exception_handler
-      @exception_handler || Proc.new {}
+      @exception_handler || proc {}
     end
   end
 end

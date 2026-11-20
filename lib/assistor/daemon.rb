@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Assistor
   class Daemon
     extend Forwardable
@@ -17,7 +19,7 @@ module Assistor
       loop do
         sleep(delay) unless assist(queue)
       end
-    rescue => e
+    rescue StandardError => e
       log_file.error e
       @configuration.exception_handler.call(e)
     end
@@ -37,7 +39,7 @@ module Assistor
       assistant_group.flush
       pid_file.delete
       exit!(0)
-    rescue => e
+    rescue StandardError => e
       log_file.error e
       @configuration.exception_handler.call(e)
     end
@@ -47,7 +49,7 @@ module Assistor
       assistant_group.flush
       pid_file.delete
       exit!(1)
-    rescue => e
+    rescue StandardError => e
       log_file.error e
       @configuration.exception_handler.call(e)
     end
@@ -55,13 +57,13 @@ module Assistor
     def assist(queue)
       assistant_group.flush
       return if assistant_group.filled?
-      return unless job = queue.pop
+      return unless (job = queue.pop)
 
       assistant = Assistant.new(@configuration, job)
       assistant.assist
 
       assistant_group.add(assistant)
-    rescue => e
+    rescue StandardError => e
       log_file.error e
       @configuration.exception_handler.call(e)
     end

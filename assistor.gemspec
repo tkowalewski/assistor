@@ -1,4 +1,6 @@
-lib = File.expand_path('../lib', __FILE__)
+# frozen_string_literal: true
+
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'assistor/version'
 
@@ -14,7 +16,6 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 3.2'
   spec.files         = Dir['CHANGELOG.md', 'CODE_OF_CONDUCT.md', 'LICENSE.txt', 'README.md', 'lib/**/*']
   spec.require_paths = ['lib']
-  spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec'
+  spec.add_dependency 'logger'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end

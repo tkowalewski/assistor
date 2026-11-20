@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Assistor
   class Assistant
     extend Forwardable
@@ -26,7 +28,7 @@ module Assistor
         stop
       end
       detach
-    rescue => e
+    rescue StandardError => e
       log_file.error e
     end
 
@@ -46,22 +48,23 @@ module Assistor
 
     def process
       with_pid_file { @job.run }
-    rescue => e
+    rescue StandardError => e
       log_file.error e
       @configuration.exception_handler.call(e)
     end
 
     def stop
       return if pid_file.exist?
+
       exit!(0)
-    rescue => e
+    rescue StandardError => e
       log_file.error e
     end
 
     def stop!
       pid_file.delete
       exit!(1)
-    rescue => e
+    rescue StandardError => e
       log_file.error e
     end
 
