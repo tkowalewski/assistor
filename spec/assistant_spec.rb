@@ -41,4 +41,22 @@ describe Assistor::Assistant do
     wait_until { File.exist?(handled) }
     expect(File.read(handled)).to eq 'boom'
   end
+
+  it 'treats a process owned by someone else as not assisting' do
+    assistant = described_class.new(configuration, Assistor::AbstractJob.new)
+    allow(Process).to receive(:fork).and_return(1)
+    allow(Process).to receive(:detach)
+    allow(Process).to receive(:kill).with(0, 1).and_raise(Errno::EPERM)
+    assistant.assist
+    expect(assistant.assists?).to be false
+  end
+
+  it 'rejects an insecure runtime directory' do
+    allow(Dir).to receive(:tmpdir).and_return(dir)
+    insecure = File.join(dir, "assistor-#{Process.uid}")
+    Dir.mkdir(insecure, 0o777)
+    File.chmod(0o777, insecure)
+    assistant = described_class.new(configuration, Assistor::AbstractJob.new)
+    expect { assistant.send(:pid_file) }.to raise_error(SecurityError)
+  end
 end

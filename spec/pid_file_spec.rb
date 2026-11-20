@@ -14,4 +14,21 @@ describe Assistor::PidFile do
     pid_file.delete
     expect(pid_file.exist?).to be false
   end
+
+  it 'creates the file readable only by the owner' do
+    pid_file.create(1)
+    expect(File.stat(path).mode & 0o777).to eq 0o600
+  end
+
+  it 'refuses to write through a symlink' do
+    target = File.join(File.dirname(path), 'target')
+    File.write(target, 'keep')
+    File.symlink(target, path)
+    expect { pid_file.create(1) }.to raise_error(SystemCallError)
+    expect(File.read(target)).to eq 'keep'
+  end
+
+  it 'ignores deleting a missing file' do
+    expect { pid_file.delete }.not_to raise_error
+  end
 end

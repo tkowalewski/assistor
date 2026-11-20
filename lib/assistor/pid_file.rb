@@ -7,11 +7,14 @@ module Assistor
     end
 
     def create(pid)
-      File.write @pid_file, pid
+      flags = File::WRONLY | File::CREAT | File::TRUNC | File::NOFOLLOW
+      File.open(@pid_file, flags, 0o600) { |file| file.write(pid) }
     end
 
     def delete
       File.delete @pid_file
+    rescue Errno::ENOENT
+      nil
     end
 
     def exist?

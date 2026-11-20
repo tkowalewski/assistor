@@ -34,7 +34,8 @@ module Assistor
 
     def assists?
       Process.kill(0, pid)
-    rescue Errno::ESRCH
+      true
+    rescue Errno::ESRCH, Errno::EPERM
       false
     end
 
@@ -103,7 +104,18 @@ module Assistor
     end
 
     def pid_file
-      @pid_file ||= PidFile.new File.join(Dir.tmpdir, format('%s.pid', Process.pid))
+      @pid_file ||= PidFile.new File.join(runtime_dir, format('%s.pid', Process.pid))
+    end
+
+    def runtime_dir
+      dir = File.join(Dir.tmpdir, format('assistor-%s', Process.uid))
+      Dir.mkdir(dir, 0o700) unless File.directory?(dir)
+      stat = File.lstat(dir)
+      unless stat.directory? && stat.owned? && stat.mode.nobits?(0o077)
+        raise SecurityError, "Insecure runtime directory: #{dir}"
+      end
+
+      dir
     end
 
     def with_pid_file
