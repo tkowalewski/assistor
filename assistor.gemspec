@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'Simple background processing framework for Ruby'
   spec.homepage      = 'https://github.com/tkowalewski/assistor'
   spec.license       = 'MIT'
+  spec.required_ruby_version = '>= 3.2'
   spec.files         = Dir['CHANGELOG.md', 'CODE_OF_CONDUCT.md', 'LICENSE.txt', 'README.md', 'lib/**/*']
   spec.require_paths = ['lib']
   spec.add_development_dependency 'bundler'
