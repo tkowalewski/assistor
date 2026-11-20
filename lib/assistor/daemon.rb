@@ -20,8 +20,8 @@ module Assistor
         sleep(delay) unless assist(queue)
       end
     rescue StandardError => e
-      log_file.error e
-      @configuration.exception_handler.call(e)
+      handle_exception(e)
+      pid_file.delete
     end
 
     private
@@ -40,8 +40,7 @@ module Assistor
       pid_file.delete
       exit!(0)
     rescue StandardError => e
-      log_file.error e
-      @configuration.exception_handler.call(e)
+      handle_exception(e)
     end
 
     def stop!
@@ -50,8 +49,7 @@ module Assistor
       pid_file.delete
       exit!(1)
     rescue StandardError => e
-      log_file.error e
-      @configuration.exception_handler.call(e)
+      handle_exception(e)
     end
 
     def assist(queue)
@@ -64,8 +62,14 @@ module Assistor
 
       assistant_group.add(assistant)
     rescue StandardError => e
+      handle_exception(e)
+    end
+
+    def handle_exception(error)
+      log_file.error error
+      @configuration.exception_handler.call(error)
+    rescue StandardError => e
       log_file.error e
-      @configuration.exception_handler.call(e)
     end
 
     def daemonize

@@ -43,4 +43,22 @@ describe Assistor::Daemon do
     daemon.send(:assist, queue)
     expect(handled.message).to eq 'queue down'
   end
+
+  describe '#run' do
+    before { allow(daemon).to receive(:start).and_raise('boot failed') }
+
+    it 'reports fatal errors and removes the pid file' do
+      handled = nil
+      configuration.exception_handler = ->(e) { handled = e }
+      configuration.pid_file.create(1)
+      daemon.run(queue)
+      expect(handled.message).to eq 'boot failed'
+      expect(configuration.pid_file.exist?).to be false
+    end
+
+    it 'survives a failing exception handler' do
+      configuration.exception_handler = ->(_) { raise 'handler failed' }
+      expect { daemon.run(queue) }.not_to raise_error
+    end
+  end
 end
